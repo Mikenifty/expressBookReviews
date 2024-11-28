@@ -8,7 +8,6 @@ let users = [];
 // Check if the user with the given username and password exists
 const authenticatedUser = (username, password) => {
 
-  
       let validusers = users.filter((user) => {
           return (user.username === username && user.password === password);
       });
@@ -19,8 +18,6 @@ const authenticatedUser = (username, password) => {
           return false;
       }
     }   
-
-
 
 //only registered users can login
 regd_users.post("/login", (req,res) => {
@@ -42,20 +39,15 @@ regd_users.post("/login", (req,res) => {
           accessToken, username
       }
       return res.status(200).send("Welcome " + username + ", you have successfully logged in!");
-  } else {
+   } else {
       return res.status(208).send("Sorry, try again. Please check username and password.");
-  }
-
+        }
 });
 
 // Add a book review
 regd_users.put("/auth/review", (req, res) => {
   // Get the ISBN from the http request 
   const isbn = parseInt(req.query.isbn, 10);
-
-//regd_users.put("/auth/review/:isbn", (req, res) => {
-  // Get the ISBN from the http request 
-  //const isbn = parseInt(req.params.isbn, 10);
   // Set the limits of the ISBN number
   const min = 0;
   const max = Object.keys(books).length + 1;
@@ -67,14 +59,11 @@ regd_users.put("/auth/review", (req, res) => {
     let reviewer = req.session.authorization.username;
     // Get the user's review from the http body
     let myReview = req.query.myRev;
-    //let myReview = req.body.myRev;
-
 
     if (myReview.length > 0) {
         // Add a username : review pair to the reviews object
         Object.assign(revBook.reviews, {[reviewer] : myReview} );  
-        console.log(revBook.reviews);
-
+        console.log(revBook.reviews);   // for debugging - see the old and new reviews in the console
         return res.send("The user " + reviewer + " added or changed a review of " + revBook.title + ".");
       } else {
         // Send a message if they didn't submit a review
@@ -104,7 +93,6 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
         res.send(reviewer + "'s review of " + revBook.title + " by " + revBook.author +" has been deleted.");
         console.log(revBook.reviews);
      }
-
 });
 
 module.exports.authenticated = regd_users;
